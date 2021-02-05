@@ -22,6 +22,11 @@ class BaseHelper {
                 $item->classes[] = 'nav-columns';
             } elseif ( $megamenu_option === 'megamenu_column' ) {
                 $item->classes[] = 'nav-column';
+
+                $hide_column_title_option = get_field( 'hide_column_title', $item );
+                if ( $hide_column_title_option ) {
+                    $item->classes[] = 'hide-column-title';
+                }
             }
         }
 
@@ -34,7 +39,7 @@ class BaseHelper {
                 'key'                   => 'group_megamenu',
                 'title'                 => 'MegaMenu',
                 'fields'                => array(
-                    array(
+                    [
                         'key'               => 'field_is_megamenu',
                         'label'             => 'Is it a Megamenu Item?',
                         'name'              => 'is_megamenu',
@@ -42,23 +47,50 @@ class BaseHelper {
                         'instructions'      => '',
                         'required'          => 0,
                         'conditional_logic' => 0,
-                        'wrapper'           => array(
+                        'wrapper'           => [
                             'width' => '',
                             'class' => '',
                             'id'    => '',
-                        ),
-                        'choices'           => array(
+                        ],
+                        'choices'           => [
                             'no'                 => 'No',
                             'megamenu_container' => 'Megamenu Container',
                             'megamenu_column'    => 'Megamenu Column',
-                        ),
+                        ],
                         'allow_null'        => 0,
                         'other_choice'      => 0,
                         'default_value'     => 'no',
                         'layout'            => 'vertical',
                         'return_format'     => 'value',
                         'save_other_choice' => 0,
-                    ),
+                    ],
+                    [
+                        'key'               => 'field_hide_column_title',
+                        'label'             => 'Hide Column Title',
+                        'name'              => 'hide_column_title',
+                        'type'              => 'true_false',
+                        'instructions'      => '',
+                        'required'          => 0,
+                        'conditional_logic' => [
+                            [
+                                [
+                                    'field'    => 'field_is_megamenu',
+                                    'operator' => '==',
+                                    'value'    => 'megamenu_column',
+                                ],
+                            ],
+                        ],
+                        'wrapper'           => [
+                            'width' => '',
+                            'class' => '',
+                            'id'    => '',
+                        ],
+                        'message'           => '',
+                        'default_value'     => 0,
+                        'ui'                => 1,
+                        'ui_on_text'        => '',
+                        'ui_off_text'       => '',
+                    ],
                 ),
                 'location'              => array(
                     array(
