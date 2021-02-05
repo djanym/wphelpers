@@ -50,8 +50,8 @@ class ConfigHelper {
                 case 'xmlrpc_enabled':
                     add_filter( 'xmlrpc_enabled', '__return_false' );
                     break;
-                case 'xmlrpc_enabled':
-                    add_filter( 'wp_resource_hints', '\Ricubai\WPHelpers\ConfigHelper::remove_wp_resource_hints', 20 );
+                case 'wp_resource_hints':
+                    add_filter( 'wp_resource_hints', '\Ricubai\WPHelpers\ConfigHelper::empty_array', 20 );
                     break;
                 case 'remove_unnecessary_headers':
                     add_filter( 'wp_headers', '\Ricubai\WPHelpers\ConfigHelper::remove_unnecessary_headers', 999 );
@@ -69,6 +69,31 @@ class ConfigHelper {
 
         //remove_filter( 'the_content', 'wptexturize' );
         //remove_filter( 'the_content', 'wpautop' );
+    }
+
+    public static function disableAllExcept( $exclude ) {
+        $all    = [
+            'wp_generator',
+            'rsd_link',
+            'feed_links',
+            'feed_links_extra',
+            'wlwmanifest_link',
+            'print_emoji_detection_script',
+            'rest_output_link_wp_head',
+            'wp_shortlink_wp_head',
+            'print_emoji_styles',
+            'rest_output_link_header',
+            'wp_shortlink_header',
+            'pings_open',
+            'src_version',
+            'xmlrpc_enabled',
+            'wp_resource_hints',
+            'remove_unnecessary_headers',
+            'rest_output_link_header',
+            'admin_bar',
+        ];
+        $merged = array_diff( $all, $exclude );
+        self::disable( $merged );
     }
 
     /**
@@ -96,7 +121,7 @@ class ConfigHelper {
      *
      * @return array
      */
-    public static function remove_wp_resource_hints() {
+    public static function empty_array() {
         return array();
     }
 
