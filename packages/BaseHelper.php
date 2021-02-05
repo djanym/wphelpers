@@ -81,4 +81,22 @@ class BaseHelper {
             ) );
         endif;
     }
+
+    public static function hide_frontpage_featured_image() {
+        add_action( 'admin_init', '\Ricubai\WPHelpers\BaseHelper::hide_frontpage_featured_image_callback' );
+    }
+
+    public static function hide_frontpage_featured_image_callback() {
+        $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+        if ( ! isset( $post_id ) ) {
+            return;
+        }
+
+        $frontpage_id = get_option( 'page_on_front' );
+
+        if ( $post_id === $frontpage_id ) {
+            remove_post_type_support( 'page', 'thumbnail' );
+        }
+    }
+
 }
