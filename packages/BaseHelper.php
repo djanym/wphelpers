@@ -114,11 +114,17 @@ class BaseHelper {
         endif;
     }
 
-    public static function hide_frontpage_featured_image() {
+    /**
+     *
+     */
+    public static function hide_frontpage_featured_image() : void {
         add_action( 'admin_init', '\Ricubai\WPHelpers\BaseHelper::hide_frontpage_featured_image_callback' );
     }
 
-    public static function hide_frontpage_featured_image_callback() {
+    /**
+     *
+     */
+    public static function hide_frontpage_featured_image_callback() : void {
         $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
         if ( ! isset( $post_id ) ) {
             return;
