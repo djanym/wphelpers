@@ -26,3 +26,25 @@ if ( ! function_exists( 'echo_if_else' ) ) :
         echo $var === $value ? wp_kses_post( $print_if ) : wp_kses_post( $print_else );
     }
 endif;
+
+if ( ! function_exists( 'get_cf_content' ) ) :
+    /**
+     * Helper for getting custom field content. Works for text, textarea, wysiwyg, etc. fields.
+     * Will not work for fields which can return `false` value.
+     * Checks if current page has value, then checks global content (option) value.
+     *
+     * @param string $cf_name Variable to compare.
+     */
+    function get_cf_content( $cf_name ) {
+        $content = get_field( $cf_name, get_the_ID() );
+        if ( $content ) {
+            return $content;
+        }
+        $content = get_field( $cf_name, 'option' );
+        if ( $content ) {
+            return $content;
+        }
+
+        return null;
+    }
+endif;
