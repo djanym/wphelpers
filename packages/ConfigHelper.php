@@ -186,4 +186,12 @@ class ConfigHelper {
 		add_filter( 'excerpt_length', fn() => $length, 999 );
 	}
 
+	/**
+	 * Set excerpt more text.
+	 *
+	 * @param string $more Number of words.
+	 */
+	public static function excerpt_more( $more ) {
+		add_filter( 'excerpt_more', fn() => $more );
+	}
 }
