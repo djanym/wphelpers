@@ -145,36 +145,30 @@ class ConfigHelper {
 	 * Removes unused css classes from menu items.
 	 */
 	public static function simplify_nav_classes() {
-		add_filter( 'nav_menu_css_class', '\Ricubai\WPHelpers\ConfigHelper::simplify_nav_classes_callback', 100, 4 );
-	}
+		add_filter( 'nav_menu_css_class',
+			static function( $classes ) {
+				foreach (
+					[
+						'menu-item-type-post_type',
+						'menu-item-type-custom',
+						'menu-item-type-post_type',
+						'menu-item-object-page',
+						'menu-item-home',
+						'menu-item-object-custom',
+						'current-menu-ancestor',
+						'current_page_parent',
+					] as $class
+				) {
+					$key = array_search( $class, $classes, true );
+					if ( $key !== false ) {
+						unset( $classes[ $key ] );
+					}
+				}
 
-	/**
-	 * Removes unused css classes from menu items.
-	 *
-	 * @param array $classes Array of css classes.
-	 *
-	 * @return array
-	 */
-	public static function simplify_nav_classes_callback( $classes ) {
-		foreach (
-			[
-				'menu-item-type-post_type',
-				'menu-item-type-custom',
-				'menu-item-type-post_type',
-				'menu-item-object-page',
-				'menu-item-home',
-				'menu-item-object-custom',
-				'current-menu-ancestor',
-				'current_page_parent',
-			] as $class
-		) {
-			$key = array_search( $class, $classes, true );
-			if ( $key !== false ) {
-				unset( $classes[ $key ] );
-			}
-		}
-
-		return $classes;
+				return $classes;
+			},
+			100,
+			4 );
 	}
 
 	/**
