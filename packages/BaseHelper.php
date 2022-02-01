@@ -160,4 +160,28 @@ class BaseHelper {
         }
     }
 
+    /**
+     *
+     */
+    public static function hide_blogpage_editor() : void {
+        add_action( 'admin_init', '\Ricubai\WPHelpers\BaseHelper::hide_blogpage_editor_callback' );
+    }
+
+    /**
+     *
+     */
+    public static function hide_blogpage_editor_callback() : void {
+        $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+        if ( ! isset( $post_id ) ) {
+            return;
+        }
+
+	    $blogpage_id = get_option( 'page_for_posts' );
+
+	    // Disable content editor for blog archive page.
+	    if ( $post_id === $blogpage_id ) {
+		    remove_post_type_support( 'page', 'editor' );
+	    }
+    }
+
 }
