@@ -115,26 +115,24 @@ class BaseHelper {
 	}
 
 	/**
-	 *
+	 * Hides the featured image field on a page that was set up as a front page.
 	 */
 	public static function hide_frontpage_featured_image() : void {
-		add_action( 'admin_init', '\Ricubai\WPHelpers\BaseHelper::hide_frontpage_featured_image_callback' );
-	}
+		add_action(
+			'admin_init',
+			static function() {
+				$post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+				if ( ! isset( $post_id ) ) {
+					return;
+				}
 
-	/**
-	 *
-	 */
-	public static function hide_frontpage_featured_image_callback() : void {
-		$post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
-		if ( ! isset( $post_id ) ) {
-			return;
-		}
+				$frontpage_id = get_option( 'page_on_front' );
 
-		$frontpage_id = get_option( 'page_on_front' );
-
-		if ( $post_id === $frontpage_id ) {
-			remove_post_type_support( 'page', 'thumbnail' );
-		}
+				if ( $post_id === $frontpage_id ) {
+					remove_post_type_support( 'page', 'thumbnail' );
+				}
+			}
+		);
 	}
 
 	/**
