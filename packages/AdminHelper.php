@@ -40,68 +40,99 @@ class AdminHelper {
         );
     }
 
-	/**
-	 * Hides the featured image field on a page that was set up as a front page.
-	 */
-	public static function hide_frontpage_featured_image() : void {
-		add_action(
-			'admin_init',
-			static function() {
-				$post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
-				if ( ! isset( $post_id ) ) {
-					return;
-				}
+    /**
+     * Hides the featured image field on a page that was set up as a front page.
+     */
+    public static function hide_frontpage_featured_image() : void {
+        add_action(
+            'admin_init',
+            static function() {
+                $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+                if ( ! isset( $post_id ) ) {
+                    return;
+                }
 
-				$frontpage_id = get_option( 'page_on_front' );
+                $frontpage_id = get_option( 'page_on_front' );
 
-				if ( $post_id === $frontpage_id ) {
-					remove_post_type_support( 'page', 'thumbnail' );
-				}
-			}
-		);
-	}
+                if ( $post_id === $frontpage_id ) {
+                    remove_post_type_support( 'page', 'thumbnail' );
+                }
+            }
+        );
+    }
 
-	/**
-	 * Hides the editor field on a page that was set up as a front page.
-	 */
-	public static function hide_frontpage_editor() : void {
-		add_action(
-			'admin_init',
-			static function() {
-				$post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
-				if ( ! isset( $post_id ) ) {
-					return;
-				}
+    /**
+     * Hides the editor field on a page that was set up as a front page.
+     */
+    public static function hide_frontpage_editor() : void {
+        add_action(
+            'admin_init',
+            static function() {
+                $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+                if ( ! isset( $post_id ) ) {
+                    return;
+                }
 
-				$frontpage_id = get_option( 'page_on_front' );
+                $frontpage_id = get_option( 'page_on_front' );
 
-				if ( $post_id === $frontpage_id ) {
-					remove_post_type_support( 'page', 'editor' );
-				}
-			}
-		);
-	}
+                if ( $post_id === $frontpage_id ) {
+                    remove_post_type_support( 'page', 'editor' );
+                }
+            }
+        );
+    }
 
-	/**
-	 * Hides the editor field on a page that was set up as a blog page.
-	 */
-	public static function hide_blogpage_editor() : void {
-		add_action(
-			'admin_init',
-			function() {
-				$post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
-				if ( ! isset( $post_id ) ) {
-					return;
-				}
+    /**
+     * Hides the editor field on a page that was set up as a blog page.
+     */
+    public static function hide_blogpage_editor() : void {
+        add_action(
+            'admin_init',
+            function() {
+                $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+                if ( ! isset( $post_id ) ) {
+                    return;
+                }
 
-				$blogpage_id = get_option( 'page_for_posts' );
+                $blogpage_id = get_option( 'page_for_posts' );
 
-				// Disable content editor for blog archive page.
-				if ( $post_id === $blogpage_id ) {
-					remove_post_type_support( 'page', 'editor' );
-				}
-			}
-		);
-	}
+                // Disable content editor for blog archive page.
+                if ( $post_id === $blogpage_id ) {
+                    remove_post_type_support( 'page', 'editor' );
+                }
+            }
+        );
+    }
+
+    /**
+     * Hides the editor field on a page.
+     *
+     * @param array $args Arguments can be `template`: template name. Like page-contact.php.
+     *
+     * @return void
+     */
+    public static function hide_page_editor( array $args = [] ) : void {
+        $args = wp_parse_args( $args, [
+            'template' => null,
+        ] );
+        add_action(
+            'admin_init',
+            function() use ( $args ) {
+                $post_id = $_GET['post'] ?? ( $_POST['post_ID'] ?? false );
+                if ( ! isset( $post_id ) ) {
+                    return;
+                }
+
+                // Disable content editor by page template.
+                if ( $args['template'] ) {
+                    $template_file = get_post_meta( $post_id, '_wp_page_template', true );
+
+                    if ( $template_file === $args['template'] ) {
+                        remove_post_type_support( 'page', 'editor' );
+                    }
+                }
+            }
+        );
+    }
 
 }
