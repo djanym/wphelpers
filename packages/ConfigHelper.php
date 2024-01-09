@@ -34,9 +34,6 @@ class ConfigHelper {
 				case 'print_emoji_styles':
 					remove_action( 'wp_print_styles', 'print_emoji_styles' );
 					break;
-				case 'rest_output_link_header': // remove Link header for rest api.
-					remove_action( 'template_redirect', 'rest_output_link_header', 11 );
-					break;
 				case 'wp_shortlink_header': // remove Link header for shortlink.
 					remove_action( 'template_redirect', 'wp_shortlink_header', 11 );
 					break;
@@ -63,17 +60,25 @@ class ConfigHelper {
 					add_filter( 'show_admin_bar', '__return_false' );
 					break;
 				case 'wp_global_styles': // Disable frontend inline global styles.
-					add_filter( 'wp_enqueue_scripts', function() {
-						ConfigHelper::dequeue_script( 'global-styles' );
-					}, 999 );
+					add_filter(
+						'wp_enqueue_scripts',
+						function() {
+							ConfigHelper::dequeue_script( 'global-styles' );
+						},
+						999
+					);
 					break;
 				case 'wp_block_styles': // Disable frontend inline global styles.
-					add_filter( 'wp_enqueue_scripts', function() {
-						ConfigHelper::dequeue_script( 'wp-block-library' );
-						ConfigHelper::dequeue_script( 'wp-block-library-theme' );
-						// REMOVE WOOCOMMERCE BLOCK CSS?
-						ConfigHelper::dequeue_script( 'wc-block-style' );
-					}, 999 );
+					add_filter(
+						'wp_enqueue_scripts',
+						function() {
+							ConfigHelper::dequeue_script( 'wp-block-library' );
+							ConfigHelper::dequeue_script( 'wp-block-library-theme' );
+							// REMOVE WOOCOMMERCE BLOCK CSS?
+							ConfigHelper::dequeue_script( 'wc-block-style' );
+						},
+						999
+					);
 					break;
 				default:
 					break;
