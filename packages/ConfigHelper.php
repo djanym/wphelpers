@@ -62,6 +62,19 @@ class ConfigHelper {
 				case 'admin_bar': // Disable admin bar.
 					add_filter( 'show_admin_bar', '__return_false' );
 					break;
+				case 'wp_global_styles': // Disable frontend inline global styles.
+					add_filter( 'wp_enqueue_scripts', function() {
+						ConfigHelper::dequeue_script( 'global-styles' );
+					}, 999 );
+					break;
+				case 'wp_block_styles': // Disable frontend inline global styles.
+					add_filter( 'wp_enqueue_scripts', function() {
+						ConfigHelper::dequeue_script( 'wp-block-library' );
+						ConfigHelper::dequeue_script( 'wp-block-library-theme' );
+						// REMOVE WOOCOMMERCE BLOCK CSS?
+						ConfigHelper::dequeue_script( 'wc-block-style' );
+					}, 999 );
+					break;
 				default:
 					break;
 			}
@@ -114,6 +127,15 @@ class ConfigHelper {
 		}
 
 		return $src;
+	}
+
+	/**
+	 * Removes (dequeue) scripts.
+	 *
+	 * @param string $script_slug Script slug.
+	 */
+	private static function dequeue_script( string $script_slug ) : void {
+		wp_dequeue_style( $script_slug );
 	}
 
 	/**
