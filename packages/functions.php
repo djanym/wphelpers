@@ -1,5 +1,7 @@
 <?php
 
+use Ricubai\WPHelpers\ContentHelper;
+
 if ( ! function_exists( 'echo_if' ) ) :
 	/**
 	 * Helper for printing some string if a variable equals to a value.
@@ -49,16 +51,25 @@ if ( ! function_exists( 'get_cf_content' ) ) :
 	}
 endif;
 
-if ( ! function_exists( 'get_queried_post_type_first_taxonomy' ) ) :
+if ( ! function_exists( 'get_cover_image_src' ) ) :
 	/**
-	 * Helper for getting queried post type taxonomy.
-	 * Returns only first registered taxonomy.
+	 * Helper for getting post cover image URL. Can be a WP featured image or from a custom field.
 	 *
 	 * @return string|false Taxonomy slug or false.
 	 */
-	function get_queried_post_type_first_taxonomy() {
-		$taxonomies = get_object_taxonomies( get_post_type() );
+	function get_cover_image_src() {
+		return ContentHelper::get_cover_image_src() ?? false;
+	}
+endif;
 
-		return $taxonomies[0] ?? false;
+if ( ! function_exists( 'the_cover_image' ) ) :
+	/**
+	 * Helper for getting post cover image HTML tag. Can be a WP featured image or from a custom field.
+	 *
+	 * @return void Taxonomy slug or false.
+	 */
+	function the_cover_image() : void {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo ContentHelper::get_cover_image();
 	}
 endif;
