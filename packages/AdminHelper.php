@@ -3,18 +3,27 @@
 namespace Ricubai\WPHelpers;
 
 class AdminHelper {
-    public static function globalContentPage() : void {
+    /**
+     * Adds global content page to admin.
+     *
+     * @param array $args Check acf_add_options_page() for possible arguments.
+     *
+     * @return void
+     */
+    public static function globalContentPage( $args = [] ) : void {
         if ( function_exists( 'acf_add_options_page' ) ) {
-            acf_add_options_page(
-                array(
+            $args = wp_parse_args(
+                $args,
+                [
                     'page_title' => 'Global Content',
                     'menu_title' => 'Global Content',
                     'menu_slug'  => 'global-content',
                     'capability' => 'edit_posts',
                     'position'   => 4.1,
                     'icon_url'   => 'dashicons-hammer',
-                )
+                ]
             );
+            acf_add_options_page( $args );
             add_action( 'admin_bar_menu', '\Ricubai\WPHelpers\AdminHelper::addToolbarItems', 100 );
         }
     }
