@@ -24,7 +24,9 @@ class AdminHelper {
                 ]
             );
             acf_add_options_page( $args );
-            add_action( 'admin_bar_menu', '\Ricubai\WPHelpers\AdminHelper::addToolbarItems', 100 );
+            add_action( 'admin_bar_menu', function( $admin_bar ) use ( $args ) {
+                self::addToolbarItems( $admin_bar, $args );
+            }, 100 );
         }
     }
 
@@ -33,17 +35,18 @@ class AdminHelper {
      *
      * @param WP_Admin_Bar $admin_bar Default admin bar object.
      */
-    public static function addToolbarItems( $admin_bar ) {
+    public static function addToolbarItems( $admin_bar, $args ) {
         $admin_bar->add_menu(
             [
-                'id'    => 'global-content',
+                'id'    => $args['menu_slug'],
                 'title' => sprintf(
-                    '<span class="ab-icon dashicons dashicons-hammer"></span><span class="ab-label">%s</span>',
-                    'Global Content'
+                    '<span class="ab-icon dashicons %s"></span><span class="ab-label">%s</span>',
+                    $args['icon_url'],
+                    $args['menu_title']
                 ),
-                'href'  => admin_url( 'admin.php?page=global-content' ),
+                'href'  => admin_url( 'admin.php?page=' . $args['menu_slug'] ),
                 'meta'  => [
-                    'title' => 'Global Content',
+                    'title' => $args['page_title'],
                 ],
             ]
         );
