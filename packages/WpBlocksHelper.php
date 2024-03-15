@@ -40,4 +40,34 @@ class WpBlocksHelper {
             }
         );
     }
+
+    /**
+     * Add Gutenberg block category.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/block_categories_all/
+     *
+     * @param array $args Category properties:
+     *                    'slug'  => 'custom-layout-category',
+     *                    'title' => 'Layout',
+     *                    'icon'  => null
+     *
+     * @return void
+     */
+    public static function add_editor_block_category( array $args = [] ) : void {
+        $args = wp_parse_args(
+            $args,
+            [
+                'icon' => null,
+            ]
+        );
+        add_filter(
+            'block_categories_all',
+            function( $categories ) use ( $args ) {
+                // Adding a new category in the beginning.
+                array_unshift( $categories, $args );
+
+                return $categories;
+            }
+        );
+    }
 }

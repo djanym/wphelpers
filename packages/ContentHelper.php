@@ -68,6 +68,12 @@ class ContentHelper {
         return $image;
     }
 
+    /**
+     * Register a shortcode.
+     * Shortcode prints current year value in YYYY format.
+     *
+     * @return void
+     */
     public static function year_shortcode() : void {
         add_shortcode(
             'year',
