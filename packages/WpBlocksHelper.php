@@ -70,4 +70,32 @@ class WpBlocksHelper {
             }
         );
     }
+
+    /**
+     * Add Gutenberg block pattern category.
+     *
+     * @link https://developer.wordpress.org/reference/functions/register_block_pattern_category/
+     *
+     * @param string $slug Category slug.
+     * @param array  $args Category properties:
+     *                     'label'       => 'Custom Patterns',
+     *                     'description' => 'Custom Patterns Description',
+     *
+     * @return void
+     */
+    public static function add_editor_pattern_category( $slug, array $args = [] ) : void {
+        $args = wp_parse_args(
+            $args,
+            [
+                'label'       => null,
+                'description' => null,
+            ]
+        );
+        add_action(
+            'init',
+            function() use ( $slug, $args ) {
+                register_block_pattern_category( $slug, $args );
+            }
+        );
+    }
 }
