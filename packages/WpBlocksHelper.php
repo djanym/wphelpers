@@ -121,4 +121,22 @@ class WpBlocksHelper {
             }
         );
     }
+
+    public static function disable_editor_fullscreen() : void {
+        add_action(
+            'enqueue_block_editor_assets',
+            static function() {
+                $script = <<< JS
+                window.onload = function() {
+                    const isFullscreenMode = wp.data.select( 'core/edit-post' ).isFeatureActive( 'fullscreenMode' );
+                    console.log( isFullscreenMode );
+                    if ( isFullscreenMode ) {
+                        wp.data.dispatch( 'core/edit-post' ).toggleFeature( 'fullscreenMode' );
+                    }
+                }
+                JS;
+                wp_add_inline_script( 'wp-blocks', $script );
+            }
+        );
+    }
 }
