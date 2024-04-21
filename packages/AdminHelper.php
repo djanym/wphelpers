@@ -74,6 +74,20 @@ class AdminHelper {
     }
 
     /**
+     * Remove featured image support for pages.
+     *
+     * @return void
+     */
+    public static function hide_page_cpt_featured_image() : void {
+        add_action(
+            'init',
+            static function() {
+                remove_post_type_support( 'page', 'thumbnail' );
+            }
+        );
+    }
+
+    /**
      * Hides the editor field on a page that was set up as a front page.
      */
     public static function hide_frontpage_editor() : void {
