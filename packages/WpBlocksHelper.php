@@ -98,4 +98,27 @@ class WpBlocksHelper {
             }
         );
     }
+
+    public static function remove_block_default_styles( array $args = [] ) : void {
+        $args = wp_parse_args(
+            $args,
+            [
+                'except' => [],
+            ]
+        );
+        add_action(
+            'enqueue_block_editor_assets',
+            static function() {
+                $script = <<< JS
+                window.onload = function() {
+                    wp.domReady( () => {
+                        wp.blocks.unregisterBlockStyle( 'core/image', 'default' );
+                        wp.blocks.unregisterBlockStyle( 'core/image', 'rounded' );
+                    });
+                }
+                JS;
+                wp_add_inline_script( 'wp-blocks', $script );
+            }
+        );
+    }
 }
