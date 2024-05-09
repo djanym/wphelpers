@@ -225,4 +225,18 @@ class ConfigHelper {
     public static function excerpt_more( $more ) {
         add_filter( 'excerpt_more', fn() => $more );
     }
+
+    /**
+     * Removes part of title from Archive Page title
+     *
+     * @return void
+     */
+    public static function remove_archive_title_prefix() : void {
+        add_filter(
+            'get_the_archive_title',
+            static function( $title ) {
+                return preg_replace( '/^(Archives|Category)\: /', '', $title );
+            }
+        );
+    }
 }

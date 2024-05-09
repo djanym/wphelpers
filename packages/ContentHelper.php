@@ -16,15 +16,18 @@ class ContentHelper {
     /**
      * Set cover image field source. It can be a custom field or a featured image.
      *
-     * @param string|array $args
+     * @param string|array $args Array of arguments.
      *
      * @return void
      */
     public static function set_cover_image_field_source( $args ) : void {
-        $args = wp_parse_args( $args, [
-            'wp_featured_image_only' => false, // If true, then only featured image will be used as a cover image.
-        ] );
-        if ( (bool) $args['wp_featured_image_only'] ) {
+        $args = wp_parse_args(
+            $args,
+            [
+                'wp_featured_image_only' => false, // If true, then only featured image will be used as a cover image.
+            ]
+        );
+        if ( $args['wp_featured_image_only'] ) {
             self::$cover_image_field_order = [ 'wp_featured_image' ];
         }
     }
