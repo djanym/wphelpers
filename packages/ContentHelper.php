@@ -46,7 +46,7 @@ class ContentHelper {
 
                 if ( ! $image_url ) {
                     // Check if the current page is a blog page.
-                    if ( is_home() || is_category() || is_tag() || is_archive() ) {
+                    if ( is_home() || is_archive() ) {
                         // Get the ID of the page set as the blog page.
                         $blog_page_id = get_option( 'page_for_posts' );
 
