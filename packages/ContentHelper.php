@@ -74,6 +74,19 @@ class ContentHelper {
         foreach ( self::$cover_image_field_order as $source_name ) {
             if ( $source_name === 'wp_featured_image' ) {
                 $image = get_the_post_thumbnail( null, 'full', [ 'class' => 'cover-image' ] );
+
+                if ( ! trim( $image ) ) {
+                    // Check if the current page is a blog page.
+                    if ( is_home() || is_category() || is_tag() || is_archive() ) {
+                        // Get the ID of the page set as the blog page.
+                        $blog_page_id = get_option( 'page_for_posts' );
+
+                        // Check if the blog page exists and has a featured image.
+                        if ( $blog_page_id ) {
+                            $image = get_the_post_thumbnail( $blog_page_id, 'full', [ 'class' => 'cover-image' ] );
+                        }
+                    }
+                }
             } else {
                 $image_url = get_cf_content( $source_name );
                 if ( $image_url ) {
