@@ -222,8 +222,17 @@ class ConfigHelper {
      *
      * @param string $more Number of words.
      */
-    public static function excerpt_more( $more ) {
-        add_filter( 'excerpt_more', fn() => $more );
+    public static function excerpt_more( $more, $is_link = false ) : void {
+        add_filter(
+            'excerpt_more',
+            static function() use ( $more, $is_link ) {
+                if ( $is_link ) {
+                    return sprintf( ' <a href="%s" class="more-link">%s</a>', get_permalink(), $more );
+                }
+
+                return $more;
+            }
+        );
     }
 
     /**
@@ -235,7 +244,7 @@ class ConfigHelper {
         add_filter(
             'get_the_archive_title',
             static function( $title ) {
-                return preg_replace( '/^(Archives|Category)\: /', '', $title );
+                return preg_replace( '/^(Archives)\: /', '', $title );
             }
         );
     }

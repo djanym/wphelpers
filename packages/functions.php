@@ -38,8 +38,9 @@ if ( ! function_exists( 'get_cf_content' ) ) :
      *
      * @param string $cf_name Variable to compare.
      */
-    function get_cf_content( $cf_name ) {
-        $content = get_field( $cf_name, get_the_ID() );
+    function get_cf_content( $cf_name, $post_id = null ) {
+        $post_id = $post_id ?? get_the_ID();
+        $content = get_field( $cf_name, $post_id );
         if ( $content ) {
             return $content;
         }
