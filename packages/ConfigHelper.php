@@ -1,7 +1,16 @@
 <?php
+/**
+ * Helpers related to WordPress configuration including removing unnecessary headers, scripts, etc.
+ * Or enabling/disabling certain features.
+ */
 
 namespace Ricubai\WPHelpers;
 
+/**
+ * Class ConfigHelper
+ *
+ * @package Ricubai\WPHelpers
+ */
 class ConfigHelper {
     public static function disable( $disable ) {
         $disable = (array) $disable;
