@@ -32,7 +32,7 @@ class FrontHelper {
     /**
      * Removes unused css classes from menu items.
      */
-    public static function simplify_nav_classes() : void {
+    public static function simplify_wp_nav_classes() : void {
         add_filter( 'nav_menu_css_class',
             static function( $classes ) {
                 foreach (
