@@ -29,6 +29,33 @@ class PluginContentHelper {
     }
 
     /**
+     * Add optgroup support for select fields in Contact Form 7.
+     * How to use:
+     *  1. Add optgroup- prefix to the option value.
+     *  2. Add endoptgroup to the option value where you want to end the optgroup.
+     *
+     * @param string $field_id The ID of the select field.
+     */
+    public static function cf7_format_optgroup_for( string $field_id ) {
+        add_action( 'wp_head', static function() use ( $field_id ) {
+            ?>
+            <script>
+                jQuery(function ($) {
+                    let sel = $('#<?php echo esc_attr( $field_id ); ?>').first(); // Custom selector ID.
+                    let foundin = sel.find('option:contains("optgroup-")');
+                    $.each(foundin, function (value) {
+                        let updated = $(this).val().replace('optgroup-', '');
+                        $(this).nextUntil('option:contains("endoptgroup")').wrapAll('<optgroup label="' + updated + '"></optgroup>');
+                    });
+                    sel.find('option:contains("optgroup-")').remove();
+                    sel.find('option:contains("endoptgroup")').remove();
+                });
+            </script>
+            <?php
+        } );
+    }
+
+    /**
      * Checks if TOC should be shown on current page/post. Can be used in loop or single post template.
      *
      * @return bool
