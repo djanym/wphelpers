@@ -257,4 +257,22 @@ class ConfigHelper {
             }
         );
     }
+
+    /**
+     * Set post type archive to order by menu order.
+     *
+     * @param $post_type
+     *
+     * @return void
+     */
+    public static function make_cpt_order_by_menu( $post_type ) : void {
+        add_action( 'pre_get_posts',
+            static function( $query ) use ( $post_type ) {
+                if ( $query->is_main_query() && is_post_type_archive( $post_type ) ) {
+                    $query->set( 'orderby', 'menu_order' );
+                    $query->set( 'order', 'ASC' );
+                }
+            }
+        );
+    }
 }

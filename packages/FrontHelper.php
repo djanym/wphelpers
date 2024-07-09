@@ -1,7 +1,19 @@
 <?php
+/**
+ * Helpers related to WordPress front-end. It's more general and not specific to content.
+ * - Changing <body> class
+ * - Getting category tree
+ * - Getting term tree
+ * - Checking if a page has child pages
+ */
 
 namespace Ricubai\WPHelpers;
 
+/**
+ * Class FrontHelper
+ *
+ * @package Ricubai\WPHelpers
+ */
 class FrontHelper {
     public static function body_class( $class ) : void {
         add_filter(

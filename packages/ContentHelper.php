@@ -4,7 +4,6 @@
  * - Cover image
  * - Quick Shortcodes: current year
  * - Pagination
- * - Contact Form 7 Google Tag Manager event
  */
 
 namespace Ricubai\WPHelpers;
