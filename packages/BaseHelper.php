@@ -116,4 +116,97 @@ class BaseHelper {
         endif;
     }
 
+    /**
+     * Enables option in Admin Dashboard -> Appearance -> Menus to show/hide menu items based on user logged in status.
+     *
+     * @return void
+     */
+    public static function enable_show_hide_menu_option() {
+        add_filter( 'wp_nav_menu_objects', [ __CLASS__, 'showhide_menu_objects' ], 10, 2 );
+        add_action( 'acf/init', [ __CLASS__, 'showhide_acf' ], 100 );
+    }
+
+    /**
+     * Implements show/hide functionality for menu items. Works with ACF for menu items.
+     *
+     * @param array $items The menu items, sorted by each menu item's menu order.
+     *
+     * @return array
+     */
+    public static function showhide_menu_objects( $items ) : array {
+        foreach ( $items as &$item ) {
+            $megamenu_option = get_field( 'showhide_switch', $item );
+            if ( $megamenu_option === 'show' ) {
+                if ( ! is_user_logged_in() ) {
+                    $item = null;
+                }
+            } elseif ( $megamenu_option === 'hide' ) {
+                if ( is_user_logged_in() ) {
+                    $item = null;
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Adds `show/hide` ACF field for menu items.
+     *
+     * @return void
+     */
+    public static function showhide_acf() {
+        if ( function_exists( 'acf_add_local_field_group' ) ):
+            acf_add_local_field_group( array(
+                'key'                   => 'group_theme_showhide',
+                'title'                 => 'Show/Hide Menu Item',
+                'fields'                => array(
+                    [
+                        'key'               => 'field_showhide_switch',
+                        'label'             => 'Show/Hide for Logged In Users Only',
+                        'name'              => 'showhide_switch',
+                        'type'              => 'radio',
+                        'instructions'      => '',
+                        'required'          => 0,
+                        'conditional_logic' => 0,
+                        'wrapper'           => [
+                            'width' => '',
+                            'class' => '',
+                            'id'    => '',
+                        ],
+                        'choices'           => [
+                            ''     => 'Always Show',
+                            'show' => 'Show For Logged In Users Only',
+                            'hide' => 'Hide For Logged In Users Only',
+                        ],
+                        'allow_null'        => 1,
+                        'other_choice'      => 0,
+                        'default_value'     => 'no',
+                        'layout'            => 'vertical',
+                        'return_format'     => 'value',
+                        'save_other_choice' => 0,
+                    ],
+                ),
+                'location'              => array(
+                    array(
+                        array(
+                            'param'    => 'nav_menu_item',
+                            'operator' => '==',
+                            'value'    => 'all',
+                        ),
+                    ),
+                ),
+                'menu_order'            => 0,
+                'position'              => 'normal',
+                'style'                 => 'default',
+                'label_placement'       => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen'        => '',
+                'active'                => true,
+                'description'           => '',
+                'modified'              => 1564259301,
+            ) );
+        endif;
+    }
+
 }

@@ -99,6 +99,40 @@ class WpBlocksHelper {
         );
     }
 
+    /**
+     * Add color palette to Gutenberg editor. Merges default color palette with custom colors.
+     *
+     * @param array $palette Custom color palette. Format:
+     *                       array(
+     *                       'name'  => 'Color name',
+     *                       'slug'  => 'theme-color-slug',
+     *                       'color' => '#F1F7FB',
+     *                       )
+     *
+     * @return void
+     */
+    public static function add_editor_color_palette( array $palette = [] ) : void {
+        add_action(
+            'after_setup_theme',
+            function() use ( $palette ) {
+                $default_color_palette = [];
+                //
+                // Get default core color palette from wp-includes/theme.json
+                if ( class_exists( 'WP_Theme_JSON_Resolver' ) ) {
+                    $settings = WP_Theme_JSON_Resolver::get_core_data()->get_settings();
+                    if ( isset( $settings['color']['palette']['default'] ) ) {
+                        $default_color_palette = $settings['color']['palette']['default'];
+                    }
+                }
+                // Add custom palettes merged with existing.
+                add_theme_support(
+                    'editor-color-palette',
+                    array_merge( $default_color_palette, array( $palette ) )
+                );
+            }
+        );
+    }
+
     public static function remove_block_default_styles( array $args = [] ) : void {
         $args = wp_parse_args(
             $args,
