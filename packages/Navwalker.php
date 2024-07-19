@@ -605,4 +605,28 @@ class Navwalker extends Walker_Nav_Menu {
 
         return $classes;
     }
+
+    /**
+     * Removes unused WP built-in CSS classes from menu items.
+     */
+    private function simplify_wp_nav_classes( $classes ) {
+        foreach (
+            [
+                'menu-item-type-post_type',
+                'menu-item-type-custom',
+                'menu-item-type-post_type',
+                'menu-item-object-page',
+                //                        'menu-item-home',
+                'menu-item-object-custom',
+                //                        'current-menu-ancestor',
+            ] as $class
+        ) {
+            $key = array_search( $class, $classes, true );
+            if ( $key !== false ) {
+                unset( $classes[ $key ] );
+            }
+        }
+
+        return $classes;
+    }
 }

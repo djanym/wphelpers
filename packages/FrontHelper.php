@@ -29,35 +29,6 @@ class FrontHelper {
         );
     }
 
-    /**
-     * Removes unused css classes from menu items.
-     */
-    public static function simplify_wp_nav_classes() : void {
-        add_filter( 'nav_menu_css_class',
-            static function( $classes ) {
-                foreach (
-                    [
-                        'menu-item-type-post_type',
-                        'menu-item-type-custom',
-                        'menu-item-type-post_type',
-                        'menu-item-object-page',
-//                        'menu-item-home',
-                        'menu-item-object-custom',
-//                        'current-menu-ancestor',
-                    ] as $class
-                ) {
-                    $key = array_search( $class, $classes, true );
-                    if ( $key !== false ) {
-                        unset( $classes[ $key ] );
-                    }
-                }
-
-                return $classes;
-            },
-            100,
-            4 );
-    }
-
     public static function get_category_tree( $args = '' ) {
         $defaults = array(
             'taxonomy' => 'category',
