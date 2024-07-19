@@ -41,10 +41,9 @@ class FrontHelper {
                         'menu-item-type-custom',
                         'menu-item-type-post_type',
                         'menu-item-object-page',
-                        'menu-item-home',
+//                        'menu-item-home',
                         'menu-item-object-custom',
-                        'current-menu-ancestor',
-                        'current_page_parent',
+//                        'current-menu-ancestor',
                     ] as $class
                 ) {
                     $key = array_search( $class, $classes, true );
