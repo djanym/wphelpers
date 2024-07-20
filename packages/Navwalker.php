@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection DuplicatedCode
+ */
 
 namespace Ricubai\WPHelpers;
 
@@ -18,7 +21,7 @@ class Navwalker extends Walker_Nav_Menu {
      * @see   Walker_Nav_Menu::start_lvl()
      * @since WP 3.0.0
      */
-    public function start_lvl( &$output, $depth = 0, $args = array() ) {
+    public function start_lvl( &$output, $depth = 0, $args = array() ) : void {
         if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
             $t = '';
             $n = '';
@@ -107,7 +110,7 @@ class Navwalker extends Walker_Nav_Menu {
          * NOTE: linkmod and icon class arrays are passed by reference and
          * are maybe modified before being used later in this function.
          */
-        $classes = self::separate_linkmods_and_icons_from_classes( $classes, $linkmod_classes, $icon_classes, $depth );
+        $classes = $this->separate_linkmods_and_icons_from_classes( $classes, $linkmod_classes, $icon_classes, $depth );
 
         // Join any icon classes plucked from $classes into a string.
         $icon_class_string = implode( ' ', $icon_classes );
@@ -225,7 +228,7 @@ class Navwalker extends Walker_Nav_Menu {
         /**
          * Set a typeflag to easily test if this is a linkmod or not.
          */
-        $linkmod_type = self::get_linkmod_type( $linkmod_classes );
+        $linkmod_type = $this->get_linkmod_type( $linkmod_classes );
 
         /**
          * START appending the internal item contents to the output.
@@ -238,7 +241,7 @@ class Navwalker extends Walker_Nav_Menu {
          */
         if ( '' !== $linkmod_type ) {
             // is linkmod, output the required element opener.
-            $item_output .= self::linkmod_element_open( $linkmod_type, $attributes );
+            $item_output .= $this->linkmod_element_open( $linkmod_type, $attributes );
         } else {
             // With no link mod type set this must be a standard <a> tag.
             $item_output .= '<a' . $attributes . '>';
@@ -274,7 +277,7 @@ class Navwalker extends Walker_Nav_Menu {
          * If the .sr-only class was set apply to the nav items text only.
          */
         if ( in_array( 'sr-only', $linkmod_classes, true ) ) {
-            $title         = self::wrap_for_screen_reader( $title );
+            $title         = $this->wrap_for_screen_reader( $title );
             $keys_to_unset = array_keys( $linkmod_classes, 'sr-only' );
             foreach ( $keys_to_unset as $k ) {
                 unset( $linkmod_classes[ $k ] );
@@ -289,13 +292,13 @@ class Navwalker extends Walker_Nav_Menu {
          */
         if ( '' !== $linkmod_type ) {
             // is linkmod, output the required element opener.
-            $item_output .= self::linkmod_element_close( $linkmod_type, $attributes );
+            $item_output .= $this->linkmod_element_close( $linkmod_type, $attributes );
         } else {
             // With no link mod type set this must be a standard <a> tag.
             $item_output .= '</a>';
         }
 
-        $item_output .= isset( $args->after ) ? $args->after : '';
+        $item_output .= $args->after ?? '';
 
         /**
          * END appending the internal item contents to the output.
@@ -563,8 +566,8 @@ class Navwalker extends Walker_Nav_Menu {
 
     private function is_parent_of_current( $item ) {
         // Check if we're on a single post page
-        if ( is_singular() ) {
-            $current_post_type = get_post_type();
+        if ( is_singular() || is_tax() ) {
+            $current_post_type = FrontHelper::get_current_post_type();
             $archive_link      = get_post_type_archive_link( $current_post_type );
             // Check if this menu item links to the archive of the current post type.
             if ( $archive_link && $item->url === $archive_link ) {
