@@ -10,6 +10,8 @@
 
 namespace Ricubai\WPHelpers;
 
+use WP_Post_Type;
+
 /**
  * Class FrontHelper
  *
@@ -85,6 +87,91 @@ class FrontHelper {
         }
 
         return false;
+    }
+
+    /**
+     * Get current post type archive page taxonomy type.
+     */
+    public static function get_current_archive_taxonomy_type() {
+        // Check if current page is built-in type of the archive page.
+        if ( is_category() || is_home() ) {
+            return 'category';
+        }
+
+        if ( is_tag() ) {
+            return 'post_tag';
+        }
+
+        if ( is_tax() ) {
+            return get_query_var( 'taxonomy' );
+        }
+
+        if ( is_post_type_archive() ) {
+            // Get post type for current page query.
+            $post_type  = self::get_current_post_type();
+            $taxonomies = get_object_taxonomies( $post_type );
+
+            return $taxonomies[0] ?? null;
+        }
+    }
+
+    /**
+     * Get post type for current page query.
+     * Works for single post, archive, taxonomy, etc.
+     */
+    public static function get_current_post_type() {
+        $post_type = get_query_var( 'post_type' );
+
+        if ( ! $post_type ) {
+            $tax = get_query_var( 'taxonomy' );
+            if ( $tax ) {
+                $cpts      = self::get_taxonomy_cpts( $tax );
+                $post_type = $cpts[0] ?? null;
+            } // Handle cases where neither post_type nor taxonomy is set
+            elseif ( is_home() || is_category() || is_tag() || is_date() ) {
+                $post_type = 'post';
+            } elseif ( is_attachment() ) {
+                $post_type = 'attachment';
+            } elseif ( is_page() ) {
+                $post_type = 'page';
+            } elseif ( is_singular() ) {
+                $post_type = get_post_type();
+            } elseif ( is_search() || is_404() ) {
+                $post_type = null; // or you could set a specific value for these cases
+            } else {
+                // Fall back to the main queried object
+                $queried_object = get_queried_object();
+                $post_type      = $queried_object instanceof WP_Post_Type ? $queried_object->name : null;
+            }
+        }
+
+        return $post_type;
+    }
+
+    /**
+     * Get post type label by post type name.
+     */
+    public static function get_post_type_label( $post_type ) : string {
+        $post_type_obj = get_post_type_object( $post_type );
+
+        return $post_type_obj->labels->name ?? '';
+    }
+
+    /**
+     * Get all associated post types for given taxonomy.
+     */
+    public static function get_taxonomy_cpts( $tax ) {
+        $all_post_types        = get_post_types( array(), 'objects' );
+        $associated_post_types = array();
+
+        foreach ( $all_post_types as $post_type_obj ) {
+            $taxonomies = get_object_taxonomies( $post_type_obj->name );
+            if ( in_array( $tax, $taxonomies ) ) {
+                $associated_post_types[] = $post_type_obj->name;
+            }
+        }
+
+        return $associated_post_types;
     }
 
 }
