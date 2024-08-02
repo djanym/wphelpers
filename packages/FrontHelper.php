@@ -98,6 +98,10 @@ class FrontHelper {
             return 'category';
         }
 
+        if ( function_exists( 'is_shop' ) && is_shop() ) {
+            return 'product_cat';
+        }
+
         if ( is_tag() ) {
             return 'post_tag';
         }
