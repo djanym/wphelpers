@@ -56,6 +56,9 @@ class ConfigHelper {
                 case 'xmlrpc_enabled':
                     add_filter( 'xmlrpc_enabled', '__return_false' );
                     break;
+                case 'disable_wp_sitemaps':
+                    add_filter( 'wp_sitemaps_enabled', '__return_false' );
+                    break;
                 case 'wp_resource_hints':
                     add_filter( 'wp_resource_hints', '\Ricubai\WPHelpers\ConfigHelper::empty_array', 20 );
                     break;
@@ -118,6 +121,7 @@ class ConfigHelper {
             'remove_unnecessary_headers',
             'rest_output_link_header',
             'admin_bar',
+            'disable_wp_sitemaps',
         ];
         $merged = array_diff( $all, $exclude );
         self::disable( $merged );
