@@ -21,15 +21,21 @@ class BaseHelper {
         foreach ( $items as &$item ) {
             $megamenu_option = get_field( 'is_megamenu', $item );
             if ( $megamenu_option === 'megamenu_container' ) {
-                $item->classes[] = 'nav-columns';
-            } elseif ( $megamenu_option === 'megamenu_column' ) {
-                $item->classes[] = 'nav-column';
+                $item->classes[] = 'has-mega-menu';
 
-                $hide_column_title_option = get_field( 'hide_column_title', $item );
-                if ( $hide_column_title_option ) {
-                    $item->classes[] = 'hide-column-title';
+                $columns_number = get_field( 'megamenu_columns_number', $item );
+                if ( $columns_number ) {
+                    $item->classes[] = 'columns-' . $columns_number;
                 }
             }
+//            } elseif ( $megamenu_option === 'megamenu_column' ) {
+//                $item->classes[] = 'nav-column';
+
+            $hide_column_title_option = get_field( 'hide_column_title', $item );
+            if ( $hide_column_title_option ) {
+                $item->classes[] = 'hide-mm-section-title';
+            }
+//            }
         }
 
         return $items;
@@ -57,7 +63,7 @@ class BaseHelper {
                         'choices'           => [
                             'no'                 => 'No',
                             'megamenu_container' => 'Megamenu Container',
-                            'megamenu_column'    => 'Megamenu Column',
+//                            'megamenu_column'    => 'Megamenu Column',
                         ],
                         'allow_null'        => 0,
                         'other_choice'      => 0,
@@ -65,6 +71,36 @@ class BaseHelper {
                         'layout'            => 'vertical',
                         'return_format'     => 'value',
                         'save_other_choice' => 0,
+                    ],
+                    // Number of columns if megamenu is enabled
+                    [
+                        'key'               => 'field_megamenu_columns',
+                        'label'             => 'Number of Columns',
+                        'name'              => 'megamenu_columns_number',
+                        'type'              => 'number',
+                        'instructions'      => '',
+                        'required'          => 0,
+                        'conditional_logic' => [
+                            [
+                                [
+                                    'field'    => 'field_is_megamenu',
+                                    'operator' => '==',
+                                    'value'    => 'megamenu_container',
+                                ],
+                            ],
+                        ],
+                        'wrapper'           => [
+                            'width' => '',
+                            'class' => '',
+                            'id'    => '',
+                        ],
+                        'default_value'     => 2,
+                        'placeholder'       => '',
+                        'prepend'           => '',
+                        'append'            => '',
+                        'min'               => 2,
+                        'max'               => 6,
+                        'step'              => 1,
                     ],
                     [
                         'key'               => 'field_hide_column_title',
