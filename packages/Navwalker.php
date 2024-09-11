@@ -39,10 +39,9 @@ class Navwalker extends Walker_Nav_Menu {
          * @param array    $classes The CSS classes that are applied to the menu `<ul>` element.
          * @param stdClass $args    An object of `wp_nav_menu()` arguments.
          * @param int      $depth   Depth of menu item. Used for padding.
-         *
-         * @since WP 4.8.0
          */
-        $class_names = implode( ' ', apply_filters( 'nav_menu_submenu_css_class', $classes, $args, $depth ) );
+        $classes     = apply_filters( 'nav_menu_submenu_css_class', $classes, $args, $depth );
+        $class_names = implode( ' ', $classes );
 
         $atts          = [];
         $atts['class'] = $class_names ? : '';
@@ -129,7 +128,9 @@ class Navwalker extends Walker_Nav_Menu {
         if ( isset( $args->has_children ) && $args->has_children ) {
             $classes[] = 'dropdown';
         }
-        if ( in_array( 'current-menu-item', $classes, true ) || in_array( 'current-menu-parent', $classes, true ) ) {
+        if ( in_array( 'current-menu-item', $classes, true )
+             || in_array( 'current-menu-ancestor', $classes, true )
+             || in_array( 'current-menu-parent', $classes, true ) ) {
             $classes[] = 'active';
         }
 
