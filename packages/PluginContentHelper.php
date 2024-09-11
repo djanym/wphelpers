@@ -56,6 +56,15 @@ class PluginContentHelper {
     }
 
     /**
+     * Disable CF7 auto paragraph formatting.
+     *
+     * @return void
+     */
+    public static function cf7_disable_autop() : void {
+        add_filter( 'wpcf7_autop_or_not', '__return_false' );
+    }
+
+    /**
      * Checks if TOC should be shown on current page/post. Can be used in loop or single post template.
      *
      * @return bool
