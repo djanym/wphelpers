@@ -10,24 +10,33 @@ class AdminHelper {
      *
      * @return void
      */
-    public static function globalContentPage( $args = [] ) : void {
-        if ( function_exists( 'acf_add_options_page' ) ) {
-            $args = wp_parse_args(
-                $args,
-                [
-                    'page_title' => 'Global Content',
-                    'menu_title' => 'Global Content',
-                    'menu_slug'  => 'global-content',
-                    'capability' => 'edit_posts',
-                    'position'   => 4.1,
-                    'icon_url'   => 'dashicons-hammer',
-                ]
-            );
-            acf_add_options_page( $args );
-            add_action( 'admin_bar_menu', function( $admin_bar ) use ( $args ) {
-                self::addToolbarItems( $admin_bar, $args );
-            }, 100 );
-        }
+    public static function globalContentPage( array $args = [] ): void {
+        add_action(
+            'acf/init',
+            function() use ( $args ) {
+                if ( function_exists( 'acf_add_options_page' ) ) {
+                    $args = wp_parse_args(
+                        $args,
+                        [
+                            'page_title' => 'Global Content',
+                            'menu_title' => 'Global Content',
+                            'menu_slug'  => 'global-content',
+                            'capability' => 'edit_posts',
+                            'position'   => 4.1,
+                            'icon_url'   => 'dashicons-hammer',
+                        ]
+                    );
+                    acf_add_options_page( $args );
+                    add_action(
+                        'admin_bar_menu',
+                        function( $admin_bar ) use ( $args ) {
+                            self::addToolbarItems( $admin_bar, $args );
+                        },
+                        100
+                    );
+                }
+            }
+        );
     }
 
     /**
@@ -55,7 +64,7 @@ class AdminHelper {
     /**
      * Hides the featured image field on a page that was set up as a front page.
      */
-    public static function hide_frontpage_featured_image() : void {
+    public static function hide_frontpage_featured_image(): void {
         add_action(
             'admin_init',
             static function() {
@@ -78,7 +87,7 @@ class AdminHelper {
      *
      * @return void
      */
-    public static function hide_page_cpt_featured_image() : void {
+    public static function hide_page_cpt_featured_image(): void {
         add_action(
             'init',
             static function() {
@@ -90,7 +99,7 @@ class AdminHelper {
     /**
      * Hides the editor field on a page that was set up as a front page.
      */
-    public static function hide_frontpage_editor() : void {
+    public static function hide_frontpage_editor(): void {
         add_action(
             'admin_init',
             static function() {
@@ -111,7 +120,7 @@ class AdminHelper {
     /**
      * Hides the editor field on a page that was set up as a blog page.
      */
-    public static function hide_blogpage_editor() : void {
+    public static function hide_blogpage_editor(): void {
         add_action(
             'admin_init',
             function() {
@@ -137,7 +146,7 @@ class AdminHelper {
      *
      * @return void
      */
-    public static function hide_page_editor( array $args = [] ) : void {
+    public static function hide_page_editor( array $args = [] ): void {
         $args = wp_parse_args( $args, [
             'template' => null,
         ] );
