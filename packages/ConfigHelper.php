@@ -132,9 +132,14 @@ class ConfigHelper {
      */
     public static function disable_easy_toc_debug() : void {
         add_filter(
-            'Easy_Plugins/Table_Of_Contents/Debug/Display',
+            'Eztoc/Table_Of_Contents/Debug/Display',
             '__return_false'
         );
+		// Old version.
+	    add_filter(
+		    'Easy_Plugins/Table_Of_Contents/Debug/Display',
+		    '__return_false'
+	    );
     }
 
     /**
