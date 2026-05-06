@@ -60,7 +60,7 @@ class PluginContentHelper {
      *
      * @return void
      */
-    public static function cf7_disable_autop() : void {
+    public static function cf7_disable_autop(): void {
         add_filter( 'wpcf7_autop_or_not', '__return_false' );
     }
 
@@ -69,7 +69,7 @@ class PluginContentHelper {
      *
      * @return bool
      */
-    public static function is_show_toc() : bool {
+    public static function is_show_toc(): bool {
         $toc_options = get_option( 'ez-toc-settings' );
         $post_type   = get_post_type();
 
@@ -113,6 +113,50 @@ class PluginContentHelper {
 //        remove_filter( 'the_content', array( 'ezTOC', 'the_content' ), 100 );
 //        add_filter( 'ez_toc_maybe_apply_the_content_filter', '__return_false', 110 );
         }
+    }
+
+    public static function insert_ez_toc_before_paragraph( $paragraph_nn = 1 ) {
+        add_filter( 'the_content', static function( $content ) use ( $paragraph_nn ) {
+            // Flag to avoid inserting the EZ TOC multiple times.
+            global $ez_toc_inserted;
+
+            // If the EZ TOC has already been inserted, return the content as is.
+            if ( ! empty( $ez_toc_inserted ) ) {
+                return $content;
+            }
+
+            // Only run on single posts/pages and not in the admin dashboard
+            if ( ! is_single() || is_admin() ) {
+                return $content;
+            }
+
+            // Check if TOC should be shown.
+            if ( ! PluginContentHelper::is_show_toc() ) {
+                return $content;
+            }
+
+            // Avoid inserting if the content already contains an EZ TOC shortcode/block
+            if ( str_contains( $content, '[ez-toc' ) ) {
+                return $content;
+            }
+
+            $insert_pos = ContentHelper::find_opening_p_position( $content, 1 );
+
+            // If nothing found, return the content as is.
+            if ( false === $insert_pos ) {
+                return $content;
+            }
+
+            $toc_to_insert = "\n\r<!-- wp:shortcode -->\n[ez-toc]\n<!-- /wp:shortcode -->";
+
+            $content = substr_replace( $content, $toc_to_insert, $insert_pos, 0 );
+
+            if ( empty( $ez_toc_inserted ) ) {
+                $ez_toc_inserted = true;
+            }
+
+            return $content;
+        }, 10 );
     }
 
 }
